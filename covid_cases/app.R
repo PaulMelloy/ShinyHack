@@ -12,13 +12,13 @@
 
 # Required libraries
 library(shiny)
-library(imager)
+
 
 
 # Data import from pappubahry on GitHub
 # repository https://github.com/pappubahry/AU_COVID19
 dat_cases <- read.csv("https://github.com/pappubahry/AU_COVID19/raw/master/time_series_cases.csv")
-head(dat_cases)
+
 
 
 
@@ -31,8 +31,8 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            # sliderInput("bins",
-            #             "Number of bins:",
+            # sliderInput(inputId = "bins",
+            #             label = "Number of bins:",
             #             min = 1,
             #             max = 50,
             #             value = 30),
@@ -40,16 +40,20 @@ ui <- fluidPage(
                          label = "New cases or Cumulative cases",
                          choices = c("Cumulative cases" = "cumu",
                                      "New cases" = "new")
-                         )
+                         ),
+            br(),
+            br(),
+            img(src = "usq.jpg")
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-           #plotOutput("distPlot"),
+           h1("Table of recent COVID-19 cases"),
+           h2("in Australia", align = "center"),
+           h3("Nationally", align = "center"),
+           h4("and by State", align = "center"),
+           
            tableOutput("dat_table")
-           # br(),
-           # br()
-           # #img(src = "images/usq.png", height = 72, width = 72)
         )
     )
 )
@@ -58,20 +62,25 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     
-    
     output$dat_table <-
         renderTable({
+            
+            
             if(input$new_cumul == "new"){
                 dat_out <- 
+                    
                     cbind(
                         Date = tail(dat_cases, n = 10L)[,1],
                         tail(dat_cases, n = 10L)[,-1] -
-                            tail(dat_cases, n = 11L)[1:10,-1])
-
-            }else{
+                            tail(dat_cases, n = 11L)[1:10,-1]
+                        )
+                
+            }
+            if(input$new_cumul == "cumu"){
                 dat_out <-
                     tail(dat_cases, n = 10L)
             }
+            
             
             dat_out
             
@@ -79,19 +88,6 @@ server <- function(input, output) {
 }
     
     
-    
-#     output$distPlot <- renderPlot({
-#         # generate bins based on input$bins from ui.R
-#         x    <- faithful[, 2]
-#         bins <- seq(min(x), max(x), length.out = input$bins + 1)
-# 
-#         # draw the histogram with the specified number of bins
-#         hist(x, breaks = bins, col = 'darkgray', border = 'white')
-#         })
-#     
-#     
- #   output$USQ_image <- load.image("covid_cases/images/usq.png")
-# }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
