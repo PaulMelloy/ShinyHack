@@ -6,14 +6,27 @@
 #
 #    http://shiny.rstudio.com/
 #
+# This template has been adapted for USQ HackyHour to demonstrate R Shiny apps
+# Author/Presenter: Dr Paul Melloy
 
+
+# Required libraries
 library(shiny)
+library(imager)
+
+
+# Data import from pappubahry on GitHub
+# repository https://github.com/pappubahry/AU_COVID19
+dat_cases <- read.csv("https://github.com/pappubahry/AU_COVID19/raw/master/time_series_cases.csv")
+head(dat_cases)
+
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Covid-19 Cases in Australia"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -27,13 +40,17 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot")
+           plotOutput("distPlot"),
+           tableOutput("dat_table")
         )
     )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+    
+    output$dat_table <-
+        renderDataTable(dat_cases)
 
     output$distPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
@@ -42,7 +59,10 @@ server <- function(input, output) {
 
         # draw the histogram with the specified number of bins
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
+        })
+    
+    
+    output$USQ_image <- load.image("covid_cases/images/usq.png")
 }
 
 # Run the application 
