@@ -81,7 +81,6 @@ server <- function(input, output) {
                     tail(dat_cases, n = 10L)
             }
             
-            
             dat_out
             
             })
