@@ -50,7 +50,7 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     output$dat_table <-
-        renderDataTable(dat_cases)
+        renderDataTable(tail(dat_cases))
 
     output$distPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
