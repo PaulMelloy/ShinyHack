@@ -35,7 +35,11 @@ ui <- fluidPage(
                         "Number of bins:",
                         min = 1,
                         max = 50,
-                        value = 30)
+                        value = 30),
+            radioButtons(inputId = "new_cumul",
+                         label = "New cases or Cumulative cases",
+                         choices = c("Cumulative cases" = "cumu",
+                                     "New cases" = "new"))
         ),
 
         # Show a plot of the generated distribution
@@ -50,7 +54,20 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     output$dat_table <-
-        renderDataTable(tail(dat_cases))
+        renderDataTable(
+            if(input$new_cumul == "new"){
+                
+                dat_out <- 
+                    cbind(
+                        tail(dat_cases, n = 10L)[,1],
+                        tail(dat_cases, n = 10L)[,-1] -
+                            tail(dat_cases, n = 11L)[1:10,-1])
+            }else{
+                dat_out <-
+                    tail(dat_cases, n = 10L)
+            }
+            dat_out
+            )
 
     output$distPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
