@@ -31,11 +31,6 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            # sliderInput(inputId = "bins",
-            #             label = "Number of bins:",
-            #             min = 1,
-            #             max = 50,
-            #             value = 30),
             radioButtons(inputId = "new_cumul",
                          label = "New cases or Cumulative cases",
                          choices = c("Cumulative cases" = "cumu",
